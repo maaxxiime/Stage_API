@@ -49,4 +49,3 @@ exports.delete = (req, res, next) => {
     .catch((err) => res.status(401).json({err}));
   }).catch((err) => res.status(404).json({message : 'utilisateur non trouvé' ,error : err, }))
 }
-a
