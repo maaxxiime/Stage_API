@@ -4,9 +4,8 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 // const path = require("path");
 // ROUTES
-// const todosRoutes = require("./routes/todos.js");
+const todosRoutes = require("./routes/todos.js");
 const userRoutes = require("./routes/users.js");
-
 
 require("dotenv").config();
 
@@ -42,7 +41,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // app.use("/images", express.static(path.join(__dirname, "images")));
 
-// app.use("/api/todos", todosRoutes);
+app.use("/api/todos", todosRoutes);
 app.use("/api/users", userRoutes);
 
 app.listen(port, () => console.log("📡 LISTENING ON PORT " + port));

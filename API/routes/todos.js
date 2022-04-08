@@ -1,14 +1,15 @@
-const express = require('Express')
+const express = require("Express");
 const router = express.Router();
 
-const auth = require('../middlewares/auth.js')
+const auth = require("../middlewares/auth.js");
+const controllers = require('../controllers/todos.js')
 
 
-router.post('todos/', auth, controllers.create_todos);
-router.get('/todos/:TagerId', controllers.read_one);
-router.get('/todos/UserId', controllers.read_all);
-router.put('todos/:TargetId', auth, controllers.update_todos);
-router.delete('todos/:TargetId', auth, controllers.delete_todos);
+router.post("/", auth, controllers.create_todos);
+// router.get("/:TagetId",auth, controllers.read_one);
+router.get("/", auth, controllers.read_all_by_userId);
+// router.put("/:TargetId", auth, controllers.update_todos);
+// router.delete("/:TargetId", auth, controllers.delete_todos);
 
 module.exports = router;
 

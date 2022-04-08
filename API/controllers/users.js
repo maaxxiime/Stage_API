@@ -26,7 +26,7 @@ exports.login = (req, res, next) => {
         if (!correspond) {
           res.status(401).json({ message: 'mdp incorrect' })
         } else {
-          const token = jwt.sign({ userID: user._id, email: user.email }, process.env.TOKEN_KEY, { expiresIn: 120 })
+          const token = jwt.sign({ userID: user._id, email: user.email }, process.env.TOKEN_KEY, { expiresIn: '7d' })
           res.status(200).json({ message: 'connexion réussi', user: user.email, userId: user.id, token: token })
         }
 
