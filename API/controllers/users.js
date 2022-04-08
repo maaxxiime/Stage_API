@@ -18,23 +18,36 @@ exports.signup = (req, res, next) => {
     .catch((err) => res.status(500).json({ err }));
 };
 
-
 exports.login = (req, res, next) => {
-  User.findOne({ email: req.body.email }).then((user) => {
-    bcrypt.compare(req.body.password, user.password)
-      .then((correspond) => {
-        if (!correspond) {
-          res.status(401).json({ message: 'mdp incorrect' })
-        } else {
-          const token = jwt.sign({ userID: user._id, email: user.email }, process.env.TOKEN_KEY, { expiresIn: '7d' })
-          res.status(200).json({ message: 'connexion réussi', user: user.email, userId: user.id, token: token })
-        }
-
-      })
-      .catch((err) => res.status(401).json({ err }));
-  }).catch((err) => res.status(404).json({ message: 'utilisateur non trouvé', error: err, }))
+  User.findOne({ email: req.body.email })
+    .then((user) => {
+      bcrypt
+        .compare(req.body.password, user.password)
+        .then((correspond) => {
+          if (!correspond) {
+            res.status(401).json({ message: "mdp incorrect" });
+          } else {
+            const token = jwt.sign(
+              { userID: user._id, email: user.email },
+              process.env.TOKEN_KEY,
+              { expiresIn: "7d" }
+            );
+            res
+              .status(200)
+              .json({
+                message: "connexion réussi",
+                user: user.email,
+                userId: user.id,
+                token: token,
+              });
+          }
+        })
+        .catch((err) => res.status(401).json({ err }));
+    })
+    .catch((err) =>
+      res.status(404).json({ message: "utilisateur non trouvé", error: err })
+    );
 };
-
 
 exports.delete = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
@@ -43,15 +56,21 @@ exports.delete = (req, res, next) => {
   const TargetId = req.params.TargetId;
 
   if (userID === TargetId) {
-    User.findByIdAndDelete(TargetId).then((user) => {
-
-      res.status(200).json({ message: `utilisateur ${user.email} supprimé` })
-
-    }).catch((err) => res.status(404).json({ message: 'utilisateur non trouvé', error: err, }))
+    User.findByIdAndDelete(TargetId)
+      .then((user) => {
+        res.status(200).json({ message: `utilisateur ${user.email} supprimé` });
+      })
+      .catch((err) =>
+        res.status(404).json({ message: "utilisateur non trouvé", error: err })
+      );
   } else {
-    res.status(403).json({ error: "Vous n'avez pas les droit pour supprimer cet utilisateur" })
+    res
+      .status(403)
+      .json({
+        error: "Vous n'avez pas les droit pour supprimer cet utilisateur",
+      });
   }
-}
+};
 
 exports.update = (req, res, next) => {
   //  token == "Bearer zriohuyeotihyetyueityeeiuyhetihyety"
@@ -61,29 +80,41 @@ exports.update = (req, res, next) => {
   const targetID = req.params.TargetId;
 
   if (userID === targetID) {
+    bcrypt
+      .hash(req.body.password, 10)
+      .then((hash) => {
+        const newEmail = req.body.email;
 
-    bcrypt.hash(req.body.password, 10).then((hash) => {
+        const updateUser = {
+          email: newEmail,
+          password: hash,
+        };
 
-      const newEmail = req.body.email;
-
-      const updateUser = {
-        email: newEmail,
-        password: hash
-      }
-
-      User.findByIdAndUpdate(targetID, updateUser)
-        .then(() => res.status(200).json({ message: `votre email à était modififié par ${updateUser.email}` }))
-        .catch((err) =>
-          res.status(404).json({ message: 'utilisateur introuvable', error: err })
-        )
-
-    }).catch((err) => res.status(500).json({ message: 'bcrypt error', error: err }));
-
+        User.findByIdAndUpdate(targetID, updateUser)
+          .then(() =>
+            res
+              .status(200)
+              .json({
+                message: `votre email à était modififié par ${updateUser.email}`,
+              })
+          )
+          .catch((err) =>
+            res
+              .status(404)
+              .json({ message: "utilisateur introuvable", error: err })
+          );
+      })
+      .catch((err) =>
+        res.status(500).json({ message: "bcrypt error", error: err })
+      );
   } else {
-    res.status(403).json({ error: "Vous n'avez pas les droit pour modifier cet utilisateur" })
+    res
+      .status(403)
+      .json({
+        error: "Vous n'avez pas les droit pour modifier cet utilisateur",
+      });
   }
-}
-
+};
 
 // url/api/users/:id
 
