@@ -2,7 +2,7 @@ const express = require("express");
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
-// const path = require("path");
+const path = require("path");
 // ROUTES
 const todosRoutes = require("./routes/todos.js");
 const userRoutes = require("./routes/users.js");
@@ -39,7 +39,7 @@ app.use((req, res, next) => {
 app.use(bodyParser.json({ extended: true }));
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// app.use("/images", express.static(path.join(__dirname, "images")));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/api/todos", todosRoutes);
 app.use("/api/users", userRoutes);

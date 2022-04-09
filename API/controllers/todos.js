@@ -1,16 +1,25 @@
 const Todos = require("../models/todos.js");
 const jwt = require("jsonwebtoken");
+const todos = require("../models/todos.js");
+const fs = require("fs");
 
 exports.create_todos = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
   const userID = decodedToken.userID;
 
-  const newtodos = new Todos({
-    name: req.body.name,
-    content: req.body.content,
-    creatorId: userID,
-  });
+  const newtodos = req.file
+    ? new Todos({
+        ...req.body,
+        creatorId: userID,
+        image: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      })
+    : new Todos({
+        ...req.body,
+        creatorId: userID,
+      });
 
   newtodos
     .save()
@@ -66,26 +75,40 @@ exports.update_todos = (req, res, next) => {
   const userID = decodedToken.userID;
   const TargetId = req.params.TargetId;
 
-  const newName = req.body.name;
-  const newContent = req.body.content
+  const newtodos = req.file
+    ? {
+        ...req.body,
+        image: `${req.protocol}://${req.get("host")}/images/${
+          req.file.filename
+        }`,
+      }
+    : {
+        ...req.body,
+      };
 
-  const updatetodo = {
-    name: newName,
-    content: newContent
-  }
-
-  Todos.findByIdAndUpdate(TargetId, updatetodo)
-    .then((todo) => {
-      if (userID === todo.creatorId) {
-        res.status(200).json({ message: "vos renseignement ont était modifés", todo: todo });
+  Todos.findById(TargetId)
+    .then((todolist) => {
+      if (userID === todolist.creatorId) {
+        if (todolist.image) {
+          const filename = todolist.image.split("/images/")[1];
+          fs.unlinkSync(`images/${filename}`);
+        }
+        todolist
+          .updateOne(newtodos)
+          .then(() =>
+            res.status(201).json({ message: `Todo mis à jour`, todo: newtodo })
+          )
+          .catch((err) => res.status(404).json({ err }));
       } else {
         res.status(403).json({
-          message: `Vous n'avez pas les droits : todoCreatorId : ${todo.creatorId}, userId : ${userID}`,
+          message: `Vous n'avez pas les droits : todoCreatorId : ${todolist.creatorId}, userId : ${userID}`,
         });
       }
     })
-    .catch((err) => res.status(404).json({ err, message: "todo introuvable" }));
-}
+    .catch((err) =>
+      res.status(404).json({ message: "Todolist non trouvé", error: err })
+    );
+};
 
 exports.delete_todos = (req, res, next) => {
   const token = req.headers.authorization.split(" ")[1];
@@ -93,19 +116,28 @@ exports.delete_todos = (req, res, next) => {
   const userID = decodedToken.userID;
   const TargetId = req.params.TargetId;
 
-  console.log(userID);
-  console.log(Todos.creatorId);
-  if(userID === Todos.creatorId) {
-    console.log(userID);
-    console.log(Todos.creatorId);
-    Todos.findByIdAndDelete(TargetId)
-    .then((targetTodo) => {
-      res.status(200).json({ message: `Votre ${targetTodo} est supprimé`});
+  Todos.findById(TargetId)
+    .then((todo) => {
+      if (userID === todo.creatorId) {
+        todo
+          .deleteOne()
+          .then((deleted) => {
+            res
+              .status(200)
+              .json({ message: `Votre todo : ${deleted.name} est supprimé` });
+          })
+          .catch((err) =>
+            res
+              .status(404)
+              .json({ message: "Impossible de supprimer", error: err })
+          );
+      } else {
+        res.status(403).json({
+          message: "Vous n'avez pas les droits pour supprmier la todolist",
+        });
+      }
     })
     .catch((err) =>
-    res.status(404).json({ message: "Todolist non trouvé", error: err })
-    )
-  }else {
-    res.status(403).json({ message: "Vous n'avez pas les droits pour supprmier la todolist"});
-  }
-}
+      res.status(404).json({ message: "Todolist non trouvé", error: err })
+    );
+};
