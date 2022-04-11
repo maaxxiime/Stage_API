@@ -32,20 +32,23 @@ exports.login = (req, res, next) => {
               process.env.TOKEN_KEY,
               { expiresIn: "7d" }
             );
-            res
-              .status(200)
-              .json({
-                message: "connexion réussi",
-                user: user.email,
-                userId: user.id,
-                token: token,
-              });
+            res.status(200).json({
+              message: "connexion réussi",
+              user: user.email,
+              userId: user.id,
+              token: token,
+            });
           }
         })
         .catch((err) => res.status(401).json({ err }));
     })
     .catch((err) =>
-      res.status(404).json({ message: "utilisateur non trouvé", error: err })
+      res
+        .status(404)
+        .json({
+          message: "utilisateur non trouvé : " + req.body.email,
+          error: err,
+        })
     );
 };
 
@@ -64,11 +67,9 @@ exports.delete = (req, res, next) => {
         res.status(404).json({ message: "utilisateur non trouvé", error: err })
       );
   } else {
-    res
-      .status(403)
-      .json({
-        error: "Vous n'avez pas les droit pour supprimer cet utilisateur",
-      });
+    res.status(403).json({
+      error: "Vous n'avez pas les droit pour supprimer cet utilisateur",
+    });
   }
 };
 
@@ -92,11 +93,9 @@ exports.update = (req, res, next) => {
 
         User.findByIdAndUpdate(targetID, updateUser)
           .then(() =>
-            res
-              .status(200)
-              .json({
-                message: `votre email à était modififié par ${updateUser.email}`,
-              })
+            res.status(200).json({
+              message: `votre email à était modififié par ${updateUser.email}`,
+            })
           )
           .catch((err) =>
             res
@@ -108,11 +107,9 @@ exports.update = (req, res, next) => {
         res.status(500).json({ message: "bcrypt error", error: err })
       );
   } else {
-    res
-      .status(403)
-      .json({
-        error: "Vous n'avez pas les droit pour modifier cet utilisateur",
-      });
+    res.status(403).json({
+      error: "Vous n'avez pas les droit pour modifier cet utilisateur",
+    });
   }
 };
 
