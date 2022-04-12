@@ -42,6 +42,31 @@ function OneTodo() {
       });
   }
 
+  function modifie() {
+    const [ModifieTodo, setModifieTodo] = useState(true)
+    
+    const config = {
+      headers: {
+        Authorization: "Bearer " + usertoken,
+      },
+    };
+
+    const bodyFormData = new FormData();
+    bodyFormData.append('userName', 'Fred');
+    bodyFormData.append(className="todoImage"); 
+
+    axios
+      .put(apiurl + "/todos/" + todoid, config)
+      .then(function (response) {
+        data: bodyFormData
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+  }
+
   useEffect(() => {
     getOneTodo();
   }, []);
@@ -54,6 +79,16 @@ function OneTodo() {
         (Edit ? (
           <div>
             <div className="DivText">
+            <Btn
+              onclick={() => modifie()}
+              disabled={false}
+              bg={colors.blue1}
+              textcolor={colors.textwhite}
+              bd={colors.blue1}
+              bdhover={colors.blue2}
+              bghover={colors.blue2}
+              text="Valider"
+            />
               <label for="name">Name :</label>
               <input
                 type="text"
@@ -74,7 +109,7 @@ function OneTodo() {
             </div>
             <div className="DivImg">
               <label for="name">Image : {Todo.image && Todo.image} </label>
-              <input type="file" accept="image/jpg, image/jpeg, image/png" />
+              <input type="file" accept="image/jpg, image/jpeg, image/png" name="todoImage"/>
               <img src={Todo.image ? Todo.image : defautimg1} />
             </div>
           </div>
