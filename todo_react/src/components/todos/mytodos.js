@@ -3,23 +3,23 @@ import { apiurl } from "../variables";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 
-
 import TodoCard from "./todocard.js";
 import colors from "../colors";
 
-
 const Maindiv = styled.div`
-display: flex;
-justify-content: center;
+  & .container {
+    margin-top: 2rem;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
 `;
 
-
-
 function Mytodos() {
-  //   const user = window.localStorage.getItem("user");
-  //   if (!user) {
-  //     window.location.assign("/login");
-  //   }
+  const user = window.localStorage.getItem("user");
+  if (!user) {
+    window.location.assign("/login");
+  }
   const [Todos, setTodos] = useState(null);
 
   function gettodo() {
@@ -51,14 +51,18 @@ function Mytodos() {
     <Maindiv>
       <h1>Todos</h1>
 
-      {Todos !== null &&
-        Todos.map((todo) => (
-          <TodoCard
-            name={todo.name}
-            content={todo.content}
-            image={todo.image}
-          />
-        ))}
+      <div className="container">
+        {Todos !== null &&
+          Todos.map((todo) => (
+            <TodoCard
+              name={todo.name}
+              content={todo.content}
+              image={todo.image}
+              id={todo._id}
+              date={todo.updatedAt}
+            />
+          ))}
+      </div>
     </Maindiv>
   );
 }

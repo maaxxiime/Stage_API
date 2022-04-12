@@ -6,6 +6,7 @@ import NotFound from "./components/error";
 import Home from "./components/home/home";
 import Login from "./components/login/login";
 import MyTodos from "./components/todos/mytodos.js";
+import OneTodo from "./components/todos/onetodo.js";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
 
         <Route path="/todos" element={<MyTodos />} />
+        <Route path="/todos/:id" element={<OneTodo />} />
 
         <Route path="*" element={<NotFound color="red" />} />
       </Routes>
