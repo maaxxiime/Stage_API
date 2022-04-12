@@ -1,8 +1,19 @@
 import axios from "axios";
 import { apiurl } from "../variables";
 import { useState, useEffect } from "react";
+import styled from "styled-components";
+
 
 import TodoCard from "./todocard.js";
+import colors from "../colors";
+
+
+const Maindiv = styled.div`
+display: flex;
+justify-content: center;
+`;
+
+
 
 function Mytodos() {
   //   const user = window.localStorage.getItem("user");
@@ -37,7 +48,7 @@ function Mytodos() {
   }, []);
 
   return (
-    <div>
+    <Maindiv>
       <h1>Todos</h1>
 
       {Todos !== null &&
@@ -48,7 +59,7 @@ function Mytodos() {
             image={todo.image}
           />
         ))}
-    </div>
+    </Maindiv>
   );
 }
 
