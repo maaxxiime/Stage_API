@@ -23,6 +23,10 @@ const MainSection = styled.section`
     17.4px 17px 26.8px rgba(0, 0, 0, 0.03),
     32.6px 31.8px 50.1px rgba(0, 0, 0, 0.036),
     78px 76px 120px rgba(0, 0, 0, 0.05);
+  
+  && p {
+    margin: 10px;
+  }
 `;
 
 const Maintitle = styled.h1`

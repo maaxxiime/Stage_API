@@ -91,14 +91,29 @@ exports.update_todos = (req, res, next) => {
       if (userID === todolist.creatorId) {
         if (todolist.image) {
           const filename = todolist.image.split("/images/")[1];
-          fs.unlinkSync(`images/${filename}`);
+          fs.unlink(`./images/${filename}`, (err) => {
+            if (err) {
+              res.status(400).json({ message: "unlink Error", error: err });
+            }
+            todolist
+              .updateOne(newtodos)
+              .then(() =>
+                res
+                  .status(201)
+                  .json({ message: `Todo mis à jour`, todo: newtodos })
+              )
+              .catch((err) => res.status(404).json({ err }));
+          });
+        } else {
+          todolist
+            .updateOne(newtodos)
+            .then(() =>
+              res
+                .status(201)
+                .json({ message: `Todo mis à jour`, todo: newtodos })
+            )
+            .catch((err) => res.status(404).json({ err }));
         }
-        todolist
-          .updateOne(newtodos)
-          .then(() =>
-            res.status(201).json({ message: `Todo mis à jour`, todo: newtodo })
-          )
-          .catch((err) => res.status(404).json({ err }));
       } else {
         res.status(403).json({
           message: `Vous n'avez pas les droits : todoCreatorId : ${todolist.creatorId}, userId : ${userID}`,

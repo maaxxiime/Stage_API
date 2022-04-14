@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import colors from "./colors";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 function Button(props) {
   const Btn = styled.a`
     cursor: pointer;
@@ -11,6 +13,9 @@ function Button(props) {
     padding: 0.2rem 1rem;
     transition: all 200ms ease-in-out;
     width: fit-content;
+    & .svg-inline--fa {
+      color: ${colors.blue1};
+    }
     &:hover {
       color: ${props.disabled
         ? colors.textwhite
@@ -52,12 +57,19 @@ function Button(props) {
       href={props.disabled ? null : props.link}
       alt={props.text}
       className="myBtn"
+      id={props.id}
     >
-      {props.text}
+      {props.text && props.text}
+      {props.icon && <FontAwesomeIcon icon={props.icon} />}
     </Btn>
   ) : props.onclick ? (
-    <Btn onClick={props.disabled ? null : props.onclick} className="myBtn">
-      {props.text}
+    <Btn
+      onClick={props.disabled ? null : props.onclick}
+      className="myBtn"
+      id={props.id}
+    >
+      {props.text && props.text}
+      {props.icon && <FontAwesomeIcon icon={props.icon} />}
     </Btn>
   ) : null;
 }

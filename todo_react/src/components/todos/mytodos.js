@@ -2,6 +2,7 @@ import axios from "axios";
 import { apiurl } from "../variables";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
+import Skeleton from "./skeleton.js";
 
 import TodoCard from "./todocard.js";
 import colors from "../colors";
@@ -51,9 +52,9 @@ function Mytodos() {
     <Maindiv>
       <h1>Todos</h1>
 
-      <div className="container">
-        {Todos !== null &&
-          Todos.map((todo) => (
+      {Todos !== null ? (
+        <div className="container">
+          {Todos.map((todo) => (
             <TodoCard
               name={todo.name}
               content={todo.content}
@@ -62,7 +63,23 @@ function Mytodos() {
               date={todo.updatedAt}
             />
           ))}
-      </div>
+        </div>
+      ) : (
+        <div className="container">
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+          <Skeleton />
+        </div>
+      )}
     </Maindiv>
   );
 }
