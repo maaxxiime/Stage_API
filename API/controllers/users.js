@@ -82,11 +82,11 @@ exports.update = (req, res, next) => {
 
   if (userID === targetID) {
     bcrypt
-      .compare(req.body.password, User.password)
+      // .compare(req.body.password, User.password)
       .hash(req.body.password, 10)
       .then((hash) => {
         const newEmail = req.body.email;
-        const newpassword = req.body.newpassword;
+        // const newpassword = req.body.newpassword;
         hash = newpassword;
 
         const updateUser = {

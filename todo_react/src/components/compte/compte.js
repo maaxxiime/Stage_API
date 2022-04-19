@@ -63,7 +63,6 @@ function MonCompte() {
     return (
 
     <div>
-            <h1> Mon compte </h1>
             <div>
             <h2> Mes informations </h2>
             <p> {email} </p>

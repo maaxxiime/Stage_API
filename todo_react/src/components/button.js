@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Button(props) {
   const Btn = styled.a`
-    cursor: pointer;
+    cursor: ${props.disabled ? "normal" : "pointer"};
     color: ${props.disabled ? colors.textwhite : props.textcolor};
     background-color: ${props.disabled ? "grey" : props.bg};
     border: 2px solid ${props.disabled ? "grey" : props.bd};
