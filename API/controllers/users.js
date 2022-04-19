@@ -74,7 +74,7 @@ exports.delete = (req, res, next) => {
 };
 
 exports.update = (req, res, next) => {
-  //  token == "Bearer zriohuyeotihyetyueityeeiuyhetihyety"
+
   const token = req.headers.authorization.split(" ")[1];
   const decodedToken = jwt.verify(token, process.env.TOKEN_KEY);
   const userID = decodedToken.userID;
@@ -82,9 +82,12 @@ exports.update = (req, res, next) => {
 
   if (userID === targetID) {
     bcrypt
+      .compare(req.body.password, User.password)
       .hash(req.body.password, 10)
       .then((hash) => {
         const newEmail = req.body.email;
+        const newpassword = req.body.newpassword;
+        hash = newpassword;
 
         const updateUser = {
           email: newEmail,

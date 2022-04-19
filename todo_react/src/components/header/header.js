@@ -35,7 +35,7 @@ function Header() {
     return(
     <Section>
 
-        <h1> {TrueUrl === "todos" ? "Mes todos" : ""} {TrueUrl === "login" ? "Connexion" : ""} {TrueUrl === "signup" ? "Inscription" : ""} {url === "http://localhost:3000/" ? "Acceuil" : ""}</h1>
+        <h1> {TrueUrl === "todos" ? "Mes todos" : ""} {TrueUrl === "login" ? "Connexion" : ""} {TrueUrl === "signup" ? "Inscription" : ""} {url === "http://localhost:3000/" ? "Acceuil" : ""} {TrueUrl === "compte" ? "Mon compte" : ""}</h1>
 
         <Btn
             link={"/compte"}
