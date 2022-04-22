@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import colors from "../colors";
 import Btn from "../button";
-import axios from "axios";
-import { apiurl } from "../variables";
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
 
 const Section = styled.section`
   padding: 1rem;
